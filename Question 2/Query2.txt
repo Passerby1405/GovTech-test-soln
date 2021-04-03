@@ -1,0 +1,25 @@
+2.1 I want to find out the top 3 car manufacturers that customers bought by sales (quantity) 
+and the sales number for it in the current month.
+
+SELECT all_sales.manufacturer, all_sales.sales_quantity, COALESCE(month_sales.month_sales, 0) FROM
+        (
+	SELECT e.manufacturer, COUNT(manufacturer) AS sales_quantity FROM sales s 
+        LEFT OUTER JOIN model d 
+    	ON s.serial_number = d.serial_number
+        INNER JOIN model_details e 
+        ON d.model_name = e.model_name
+        GROUP BY e.manufacturer
+        ORDER BY sales_quantity DESC
+        LIMIT 3
+	) AS all_sales
+        
+        LEFT OUTER JOIN
+        (
+	SELECT e.manufacturer, COUNT(e.manufacturer) AS month_sales FROM sales s 
+        LEFT OUTER JOIN model d 
+    	ON s.serial_number = d.serial_number
+        INNER JOIN model_details e 
+        ON d.model_name = e.model_name
+        WHERE (SELECT date_part('month', (s.time_of_sale))) = (SELECT date_part('month', (SELECT current_timestamp)))
+        GROUP BY e.manufacturer) AS month_sales
+        ON all_sales.manufacturer = month_sales.manufacturer;

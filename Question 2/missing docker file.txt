@@ -1,0 +1,4 @@
+*was unable to create the dockerfile as requested
+
+provided the entity-relationship digram
+Query 1 & 2, response to the two questions

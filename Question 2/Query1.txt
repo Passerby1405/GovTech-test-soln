@@ -1,0 +1,12 @@
+Query 1: I want to know the list of our customers and their spending.
+
+       
+
+SELECT v.customer_name, SUM(e.price) FROM sales s 
+INNER JOIN customer v
+ON s.transactional_id = v.transactional_id
+LEFT OUTER JOIN model d 
+ON s.serial_number = d.serial_number
+INNER JOIN model_details e 
+ON d.model_name = e.model_name
+GROUP BY v.customer_name;
